@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
+import { DumbbellIcon, Loader2Icon } from "lucide-react";
 
 import { api, initCsrf } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const loginSchema = z.object({
   email: z.email({ error: "Informe um e-mail válido" }),
@@ -28,10 +22,16 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>;
 
+// Evita open redirect: só aceita caminhos internos.
+function safePath(path: string | null): string {
+  if (path && path.startsWith("/") && !path.startsWith("//")) return path;
+  return "/dashboard";
+}
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const redirectTo = safePath(searchParams.get("redirect"));
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -75,59 +75,68 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader className="items-center text-center">
-        <div className="mx-auto mb-2 flex size-11 items-center justify-center rounded-xl bg-primary font-heading text-lg font-bold text-primary-foreground">
-          cf
+    <div className="w-full max-w-sm">
+      <div className="mb-8 flex flex-col gap-4">
+        <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm lg:hidden">
+          <DumbbellIcon className="size-5" />
         </div>
-        <CardTitle className="text-xl">Entrar na central-fit</CardTitle>
-        <CardDescription>
-          Acesse o painel com seu e-mail e senha
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
-          noValidate
-        >
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="email">E-mail</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="voce@exemplo.com"
-              aria-invalid={Boolean(errors.email)}
-              {...register("email")}
-            />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">
+            Bem-vindo de volta
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Entre com seu e-mail e senha para acessar o painel.
+          </p>
+        </div>
+      </div>
 
-          <div className="flex flex-col gap-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+        noValidate
+      >
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="email">E-mail</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="voce@exemplo.com"
+            aria-invalid={Boolean(errors.email)}
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-sm text-destructive">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
             <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              aria-invalid={Boolean(errors.password)}
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="text-sm text-destructive">
-                {errors.password.message}
-              </p>
-            )}
+            <Link
+              href="#"
+              className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              Esqueceu a senha?
+            </Link>
           </div>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            aria-invalid={Boolean(errors.password)}
+            {...register("password")}
+          />
+          {errors.password && (
+            <p className="text-sm text-destructive">{errors.password.message}</p>
+          )}
+        </div>
 
-          <Button type="submit" className="mt-2 w-full" disabled={submitting}>
-            {submitting && <Loader2Icon className="animate-spin" />}
-            Entrar
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        <Button type="submit" className="mt-2 w-full" disabled={submitting}>
+          {submitting && <Loader2Icon className="animate-spin" />}
+          Entrar
+        </Button>
+      </form>
+    </div>
   );
 }

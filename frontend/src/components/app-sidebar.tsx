@@ -38,8 +38,8 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-1 py-1.5">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary font-heading text-sm font-bold text-primary-foreground">
-            cf
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <DumbbellIcon className="size-4" />
           </div>
           <span className="font-heading text-base font-semibold group-data-[collapsible=icon]:hidden">
             central-fit

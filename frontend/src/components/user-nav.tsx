@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { LogOutIcon } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
+import { Loader2Icon, LogOutIcon, SettingsIcon } from "lucide-react";
 
 import { api, initCsrf } from "@/lib/api";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -10,7 +11,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -25,18 +25,20 @@ function getInitials(name: string) {
 }
 
 export function UserNav({ user }: { user: { name: string; email: string } }) {
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   async function handleLogout() {
+    if (loading) return;
+    setLoading(true);
     try {
       await initCsrf();
       await api.post("/api/logout");
     } catch {
-      // Mesmo que falhe, levamos o usuário ao login.
-    } finally {
-      router.replace("/login");
-      router.refresh();
+      // Segue para o login mesmo se a chamada falhar.
     }
+    // Navegação "hard": garante estado de autenticação limpo, sem cache do
+    // router do Next.
+    window.location.assign("/login");
   }
 
   return (
@@ -45,7 +47,9 @@ export function UserNav({ user }: { user: { name: string; email: string } }) {
         render={
           <Button variant="ghost" className="h-9 gap-2 px-1.5">
             <Avatar size="sm">
-              <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+              <AvatarFallback className="bg-primary/10 text-primary">
+                {getInitials(user.name)}
+              </AvatarFallback>
             </Avatar>
             <span className="hidden text-sm font-medium sm:inline">
               {user.name}
@@ -54,17 +58,22 @@ export function UserNav({ user }: { user: { name: string; email: string } }) {
         }
       />
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">{user.name}</span>
-            <span className="text-xs font-normal text-muted-foreground">
-              {user.email}
-            </span>
-          </div>
-        </DropdownMenuLabel>
+        <div className="px-2 py-1.5">
+          <p className="truncate text-sm font-medium">{user.name}</p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" onClick={handleLogout}>
-          <LogOutIcon />
+        <DropdownMenuItem render={<Link href="/dashboard/configuracoes" />}>
+          <SettingsIcon />
+          Configurações
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          variant="destructive"
+          disabled={loading}
+          onClick={handleLogout}
+        >
+          {loading ? <Loader2Icon className="animate-spin" /> : <LogOutIcon />}
           Sair
         </DropdownMenuItem>
       </DropdownMenuContent>
