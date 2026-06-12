@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  ActivityIcon,
   CalendarIcon,
   DumbbellIcon,
   LayoutDashboardIcon,
@@ -27,6 +28,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboardIcon },
   { title: "Alimentação", url: "/dashboard/alimentacao", icon: UtensilsCrossedIcon },
+  { title: "Atividades", url: "/dashboard/atividades", icon: ActivityIcon },
   { title: "Alunos", url: "/dashboard/alunos", icon: UsersIcon },
   { title: "Treinos", url: "/dashboard/treinos", icon: DumbbellIcon },
   { title: "Agenda", url: "/dashboard/agenda", icon: CalendarIcon },
