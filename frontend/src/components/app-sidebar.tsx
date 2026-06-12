@@ -8,6 +8,7 @@ import {
   LayoutDashboardIcon,
   SettingsIcon,
   UsersIcon,
+  UtensilsCrossedIcon,
 } from "lucide-react";
 
 import {
@@ -25,6 +26,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboardIcon },
+  { title: "Alimentação", url: "/dashboard/alimentacao", icon: UtensilsCrossedIcon },
   { title: "Alunos", url: "/dashboard/alunos", icon: UsersIcon },
   { title: "Treinos", url: "/dashboard/treinos", icon: DumbbellIcon },
   { title: "Agenda", url: "/dashboard/agenda", icon: CalendarIcon },

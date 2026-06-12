@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Nutrition\NutritionController;
+use App\Http\Controllers\Nutrition\NutritionImportController;
+use App\Http\Controllers\Settings\UserSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +24,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me'])->name('user');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Nutrição
+    Route::get('/nutrition/daily', [NutritionController::class, 'daily']);
+    Route::get('/nutrition/weekly', [NutritionController::class, 'weekly']);
+    Route::post('/nutrition/import', [NutritionImportController::class, 'import']);
+    Route::delete('/nutrition/entries/{entry}', [NutritionController::class, 'destroy']);
+
+    // Configurações
+    Route::get('/settings', [UserSettingController::class, 'show']);
+    Route::put('/settings', [UserSettingController::class, 'update']);
 });

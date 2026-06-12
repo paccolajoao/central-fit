@@ -62,3 +62,29 @@ export async function requireUser(): Promise<User> {
 
   return user;
 }
+
+/**
+ * Fetch server-side autenticado — encaminha cookies da sessão para o backend.
+ * Retorna null em caso de erro ou 401.
+ */
+export async function serverFetch<T>(path: string): Promise<T | null> {
+  const headerStore = await headers();
+  const cookieHeader = headerStore.get("cookie") ?? "";
+
+  try {
+    const res = await fetch(`${API_URL}${path}`, {
+      headers: {
+        Accept: "application/json",
+        Cookie: cookieHeader,
+        Referer: APP_ORIGIN,
+        Origin: APP_ORIGIN,
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
