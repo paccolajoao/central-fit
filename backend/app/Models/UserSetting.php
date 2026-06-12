@@ -11,12 +11,14 @@ class UserSetting extends Model
     protected $fillable = [
         'user_id',
         'nutrition_goals',
+        'activity_goals',
         'cronometer_email',
         'cronometer_password_encrypted',
     ];
 
     protected $casts = [
         'nutrition_goals' => 'array',
+        'activity_goals' => 'array',
     ];
 
     protected $hidden = [

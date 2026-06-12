@@ -23,6 +23,11 @@ class UserSettingController extends Controller
                 'carbs' => 200,
                 'fat' => 65,
             ],
+            'activity_goals' => $settings->activity_goals ?? [
+                'weekly_duration_minutes' => 150,
+                'daily_calories' => 400,
+                'daily_steps' => 8000,
+            ],
             'cronometer_email' => $settings->cronometer_email,
             'cronometer_configured' => $settings->cronometer_configured ?? false,
         ]);
@@ -36,6 +41,10 @@ class UserSettingController extends Controller
             'nutrition_goals.protein' => 'nullable|numeric|min:0|max:1000',
             'nutrition_goals.carbs' => 'nullable|numeric|min:0|max:2000',
             'nutrition_goals.fat' => 'nullable|numeric|min:0|max:1000',
+            'activity_goals' => 'nullable|array',
+            'activity_goals.weekly_duration_minutes' => 'nullable|integer|min:0|max:10000',
+            'activity_goals.daily_calories' => 'nullable|integer|min:0|max:5000',
+            'activity_goals.daily_steps' => 'nullable|integer|min:0|max:100000',
             'cronometer_email' => 'nullable|email|max:255',
             'cronometer_password' => 'nullable|string|min:1|max:255',
         ]);
@@ -44,6 +53,10 @@ class UserSettingController extends Controller
 
         if ($request->has('nutrition_goals')) {
             $settings->nutrition_goals = $request->input('nutrition_goals');
+        }
+
+        if ($request->has('activity_goals')) {
+            $settings->activity_goals = $request->input('activity_goals');
         }
 
         if ($request->has('cronometer_email')) {
@@ -58,6 +71,7 @@ class UserSettingController extends Controller
 
         return response()->json([
             'nutrition_goals' => $settings->nutrition_goals,
+            'activity_goals' => $settings->activity_goals,
             'cronometer_email' => $settings->cronometer_email,
             'cronometer_configured' => $settings->cronometer_configured,
         ]);

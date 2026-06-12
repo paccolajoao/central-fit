@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Activity\ActivityController;
+use App\Http\Controllers\Activity\ActivityImportController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Nutrition\NutritionController;
 use App\Http\Controllers\Nutrition\NutritionImportController;
@@ -30,6 +32,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/nutrition/weekly', [NutritionController::class, 'weekly']);
     Route::post('/nutrition/import', [NutritionImportController::class, 'import']);
     Route::delete('/nutrition/entries/{entry}', [NutritionController::class, 'destroy']);
+
+    // Atividades
+    Route::get('/activities/daily', [ActivityController::class, 'daily']);
+    Route::get('/activities/weekly', [ActivityController::class, 'weekly']);
+    Route::delete('/activities/{activity}', [ActivityController::class, 'destroy']);
+    Route::post('/activities/import/samsung', [ActivityImportController::class, 'importSamsung']);
 
     // Configurações
     Route::get('/settings', [UserSettingController::class, 'show']);
