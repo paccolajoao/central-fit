@@ -1,0 +1,14 @@
+# Ignores de nível raiz — cada subprojeto (frontend/, backend/) tem o seu próprio .gitignore.
+
+# Dependências do root (concurrently)
+/node_modules
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+.idea/
+*.swp

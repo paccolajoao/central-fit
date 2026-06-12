@@ -1,0 +1,16 @@
+{
+  "name": "central-fit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo central-fit — frontend Next.js + backend Laravel",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "cd backend && php artisan serve --host=127.0.0.1 --port=8000",
+    "dev:web": "cd frontend && npm run dev",
+    "build:web": "cd frontend && npm run build",
+    "lint:web": "cd frontend && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
